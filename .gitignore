@@ -32,6 +32,7 @@
 .spyproject
 .tox/
 .venv
+.vscode/
 .webassets-cache
 /site
 ENV/

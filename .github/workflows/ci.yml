@@ -1,0 +1,51 @@
+---
+name: CI
+
+on:
+  - push
+
+jobs:
+  build_and_test:
+    name: Build and test
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        scenario:
+          - default
+          - no-create-user
+          - unprivileged
+    steps:
+      - name: Checkout code
+        id: checkout
+        uses: actions/checkout@v2-beta
+        with:
+          fetch-depth: 2
+      - name: Setup python
+        id: setup-python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.8.0'
+      - name: Install poetry
+        id: install-poetry
+        run: |
+          pip install -U pip
+          pip install poetry==0.12.17
+      - name: Configure poetry
+        id: configure-poetry
+        run: poetry config settings.virtualenvs.in-project true
+      - name: Restore python dependencies from cache
+        id: restore-deps
+        uses: actions/cache@v1
+        with:
+          path: .venv
+          key: "py-build-${{ runner.os }}-${{ hashFiles('poetry.lock') }}"
+          restore-keys: |
+            py-build-${{ runner.os }}-${{ hashFiles('poetry.lock') }}
+            py-build-${{ runner.os }}-
+            py-build-
+      - name: Install dependencies
+        id: install-deps
+        run: poetry install --no-ansi --no-interaction
+      - name: Run molecule
+        id: run-molecule
+        run: poetry run molecule test --parallel --scenario-name ${{ matrix.scenario }}

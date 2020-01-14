@@ -1,0 +1,9 @@
+{
+  "enabled": true,
+  "extends": [
+    ":base"
+  ],
+  "python": {
+    "enabled": true
+  }
+}
