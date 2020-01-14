@@ -1,0 +1,14 @@
+- name: Create crontab for ansible-pull
+  cron:
+    backup: true
+    name: 'Ansible Pull run'
+    job: >
+      {{ ansible_pull_config_path }}/do_ansible_pull
+      > /dev/null 2>&1
+    minute: "{{ ansible_pull_schedule['minute'] | default('*/5') }}"
+    hour: "{{ ansible_pull_schedule['hour'] | default('*') }}"
+    day: "{{ ansible_pull_schedule['day'] | default('*') }}"
+    weekday: "{{ ansible_pull_schedule['weekday'] | default('*') }}"
+    month: "{{ ansible_pull_schedule['month'] | default('*') }}"
+    user: "{{ ansible_pull_username }}"
+    state: present

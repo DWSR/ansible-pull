@@ -1,0 +1,4 @@
+- name: Test playbook (unencrypted)
+  hosts: all
+  tasks:
+    - command: echo 'Hello, world!'

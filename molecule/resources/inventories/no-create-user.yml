@@ -1,0 +1,23 @@
+all:
+  children:
+    ubuntu:
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+    debian:
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+    centos:
+      children:
+        centos_7:
+          vars:
+            ansible_python_interpreter: /usr/bin/python
+        centos_8:
+          vars:
+            ansible_python_interpreter: /usr/bin/python3
+  vars:
+    ansible_pull_create_user: false
+    ansible_pull_inventory: inventory.yml
+    ansible_pull_playbook: playbook_unencrypted.yml
+    ansible_pull_repo_url: file:///tmp/ansible-repo
+    ansible_pull_install_dir: /opt/anzibal
+    ansible_pull_username: anzibal

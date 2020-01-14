@@ -1,0 +1,61 @@
+ansible_pull_path: "bin"
+ansible_pull_base_packages:
+    ansible: 2.9.2
+    passlib: 1.7.2
+ansible_pull_packages: "{{ ansible_pull_extra_packages | combine(ansible_pull_base_packages) }}"
+ansible_pull_system_packages:
+  Ubuntu:
+    '16':
+      2:
+        - python-venv
+        - python-pip
+        - python-setuptools
+        - git
+      3:
+        - python3-venv
+        - python3-pip
+        - python3-setuptools
+        - git
+    '18':
+      2:
+        - python-venv
+        - python-pip
+        - python-setuptools
+        - git
+      3:
+        - python3-venv
+        - python3-pip
+        - python3-setuptools
+        - git
+  Debian:
+    '9':
+      2:
+        - python-venv
+        - python-pip
+        - python-setuptools
+        - git
+      3:
+        - python3-venv
+        - python3-pip
+        - python3-setuptools
+        - git
+    '10':
+      2:
+        - python-venv
+        - python-pip
+        - python-setuptools
+        - git
+      3:
+        - python3-venv
+        - python3-pip
+        - python3-setuptools
+        - git
+  CentOS:
+    '7':
+      2:
+        - git
+    '8':
+      3:
+        - python3-pip
+        - git
+ansible_pull_systemd_analyze_path: /usr/bin/systemd-analyze

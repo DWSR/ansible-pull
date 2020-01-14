@@ -1,0 +1,60 @@
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-executables-have-shebangs
+      - id: pretty-format-json
+        args:
+          - --indent=2
+          - --autofix
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-vcs-permalinks
+      - id: debug-statements
+      - id: detect-aws-credentials
+        args:
+          - --allow-missing-credentials
+      - id: fix-encoding-pragma
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/asottile/blacken-docs
+    rev: v1.3.0
+    hooks:
+      - id: blacken-docs
+  - repo: https://github.com/ansible/ansible-lint
+    rev: v4.2.0
+    hooks:
+      - id: ansible-lint
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.1.7
+    hooks:
+      - id: remove-tabs
+        exclude_types: [makefile]
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.19.0
+    hooks:
+      - id: yamllint
+        args: [-s]
+  - repo: https://github.com/psf/black
+    rev: 19.10b0
+    hooks:
+      - id: black
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: '3.7.9'
+    hooks:
+      - id: flake8
+  - repo: https://gitlab.com/smop/pre-commit-hooks
+    rev: v1.0.0
+    hooks:
+      - id: check-poetry
+  - repo: https://github.com/danielhoherd/pre-commit-hooks
+    rev: d0ec497c80183b0e8b19216154c26a956103a416
+    hooks:
+      - id: CVE-2017-18342
+      - id: remove-unicode-non-breaking-spaces
+      - id: remove-unicode-zero-width-non-breaking-spaces
+      - id: remove-en-dashes
+      - id: sort-gitignore

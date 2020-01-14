@@ -1,0 +1,33 @@
+- name: Ensure that required values are set.
+  assert:
+    that:
+      - ansible_pull_repo_url is defined and ansible_pull_repo_url | length > 0
+      - ansible_pull_playbook is defined and ansible_pull_playbook | length > 0
+      - ansible_pull_inventory is defined and ansible_pull_inventory | length > 0
+    quiet: true
+    success_msg: 'All required variables are set'
+    fail_msg: >
+      One or more of the required values are not set.
+      Please ensure that all required values are set.
+
+- name: Ensure that timer method is supported
+  assert:
+    that:
+      - ansible_pull_timer_method in ["systemd", "cron"]
+    quiet: true
+    success_msg: 'Specified timer method is supported'
+    fail_msg: >
+      The specified timer method is not supported by this playbook. Please use one
+      of the following methods: systemd, cron.
+      Method specified was: {{ ansible_pull_timer_method }}
+
+- name: Ensure that the install method is supported
+  assert:
+    that:
+      - ansible_pull_install_method in ["venv"]
+    quiet: true
+    success_msg: 'Specified install method is supported'
+    fail_msg: >
+      The specified install method is not supported by this playbook. Please use one
+      of the following methods: venv.
+      Method specified was: {{ ansible_pull_install_method }}

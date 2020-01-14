@@ -1,0 +1,28 @@
+- name: "Install systemd units"
+  template:
+    src: systemd_{{ item }}.j2
+    dest: /etc/systemd/system/ansible-pull.{{ item }}
+    mode: 0600
+  loop:
+    - service
+    - timer
+  register: systemd_units
+
+# I'd prefer to use `validate` on the `template` module, but it did not work
+# correctly for some reason. This is a decent workaround.
+- name: "Verify systemd units" # noqa 503
+  command: "{{ ansible_pull_systemd_analyze_path }} verify {{ item['dest'] }}"
+  when: systemd_units['changed']
+  changed_when: false
+  loop_control:
+    label: "{{ item['dest'] }}"
+  loop: "{{ systemd_units['results'] }}"
+
+# Setting daemon_reload to true will cause this task to always call
+# `systemctl daemon-reload`, even if no other action is taken.
+- name: Enable and start timer
+  systemd:
+    name: ansible-pull.timer
+    daemon_reload: true
+    enabled: true
+    state: started

@@ -1,0 +1,8 @@
+extend: default
+
+ignore: |
+  .venv
+
+rules:
+  line-length:
+    max: 100

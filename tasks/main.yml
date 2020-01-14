@@ -1,0 +1,48 @@
+- include_tasks:
+    file: "{{ task['file'] }}"
+    apply:
+      become: "{{ task['become'] | default(True) }}"
+      become_user: >-
+        {{
+          (task['become_user'] is defined) |
+          ternary(task['become_user'], ansible_pull_username)
+        }}
+  when: task['when']
+  loop_control:
+    label: "{{ task['file'] }}"
+    loop_var: task
+  loop:
+    - file: "preflight_checks.yml"
+      when: true
+      become: false
+      become_user: ~
+    - file: "create_user.yml"
+      when: "{{ ansible_pull_create_user | bool }}"
+      become_user: 'root'
+    - file: "create_ssh_key.yml"
+      when: "{{ (ansible_pull_create_ssh_key and not ansible_pull_create_user) | bool }}"
+    - file: "add_deploy_key.yml"
+      when: >-
+        {{
+          ansible_pull_github['auth_token'] and
+          ansible_pull_github['repo_owner'] and
+          ansible_pull_github['repo_name']
+        }}
+    - file: "system_packages.yml"
+      become_user: 'root'
+      when: "{{ ansible_pull_install_system_prereqs }}"
+      # Becoming the same user that you connect with is a noop, so it's safe even when that
+      # user does not have sudo permissions.
+    - file: "install_{{ ansible_pull_install_method | lower }}.yml"
+      when: true
+    - file: "vaults.yml"
+      when: "{{ ansible_pull_vaults is defined and ansible_pull_vaults | length > 0 }}"
+    - file: "timer_{{ ansible_pull_timer_method | lower }}.yml"
+      when: true
+      become_user: >-
+        {{
+          (ansible_pull_timer_method == 'systemd') |
+          ternary('root', ansible_pull_username)
+        }}
+    - file: "logging.yml"
+      when: "{{ ansible_pull_timer_method != 'systemd' }}"

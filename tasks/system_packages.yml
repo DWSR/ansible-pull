@@ -1,0 +1,35 @@
+- name: Ensure required system packages are present
+  package:
+    name: >-
+      {{
+        ansible_pull_system_packages[ansible_distribution][ansible_distribution_major_version][
+          ansible_python['version']['major']
+        ]
+      }}
+    state: present
+  when: ansible_distribution_major_version in ansible_pull_system_packages[ansible_distribution]
+
+- name: Check if pip is present (CentOS 7)
+  command: command -v pip
+  failed_when: pip_presence['rc'] not in [0, 1]
+  changed_when: false
+  register: pip_presence
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7'
+
+- name: Install pip (CentOS 7)
+  shell:
+    cmd: 'curl https://bootstrap.pypa.io/get-pip.py | python'
+    warn: false
+  when: ansible_pull_install_pip and pip_presence['rc'] | default(None) == 1
+
+- name: Install virtualenv (CentOS 7)
+  pip:
+    name: virtualenv
+    state: present
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7'
+
+- name: Install setuptools (CentOS)
+  pip:
+    name: setuptools
+    state: present
+  when: ansible_distribution == 'CentOS'

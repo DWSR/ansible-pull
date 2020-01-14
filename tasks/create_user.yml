@@ -1,0 +1,27 @@
+- name: Create Ansible group
+  group:
+    name: "{{ ansible_pull_username }}"
+    system: true
+    state: present
+
+- name: Create Ansible user
+  user:
+    append: true
+    comment: To run Ansible in pull mode
+    create_home: true
+    name: "{{ ansible_pull_username }}"
+    group: "{{ ansible_pull_username }}"
+    groups: "{{ ansible_pull_username }}"
+    shell: /bin/bash
+    home: "{{ ansible_pull_install_dir }}"
+    generate_ssh_key: true
+    ssh_key_type: ed25519
+    state: present
+    system: true
+  register: ansible_account
+
+- name: Grant Ansible passwordless sudo
+  copy:
+    src: sudoers_ansible
+    dest: /etc/sudoers.d/ansible
+    mode: 0440

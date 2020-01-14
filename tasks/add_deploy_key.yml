@@ -1,0 +1,30 @@
+- name: Read existing SSH public key
+  slurp:
+    src: "{{ ansible_user_dir }}/{{ ansible_pull_existing_ssh_pubkey }}"
+  register: ansible_pull_existing_ssh_pubkey_contents
+  when: not ansible_pull_create_ssh_key and not ansible_pull_create_user
+
+- name: Set SSH public key var
+  set_fact:
+    ansible_pull_ssh_id: >-
+      {{
+        ansible_account['ssh_public_key'] |
+        default(ansible_pull_created_ssh_key['public_key']) |
+        default(ansible_pull_existing_ssh_pubkey_contents)
+      }}
+
+- name: Add deploy key to GitHub
+  github_deploy_key:
+    name: "ansible@{{ ansible_fqdn }}"
+    owner: "{{ ansible_pull_github['repo_owner'] }}"
+    repo: "{{ ansible_pull_github['repo_name'] }}"
+    key: "{{ ansible_pull_ssh_id }}"
+    token: "{{ ansible_pull_github['auth_token'] }}"
+    state: present
+
+- name: Add Github to known hosts
+  known_hosts:
+    name: github.com
+    # yamllint disable-line rule:line-length
+    key: github.com,192.30.253.113 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ== # noqa 204
+    state: present

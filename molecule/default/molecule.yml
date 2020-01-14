@@ -1,0 +1,105 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  - name: ubuntu-1604
+    image: dwsr/molecule-ubuntu-1604:20200112
+    command: /sbin/init
+    dockerfile: ../resources/docker/default.Dockerfile.j2
+    tmpfs:
+        - /run
+        - /tmp
+    capabilities:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - ubuntu
+  - name: ubuntu-1804
+    image: dwsr/molecule-ubuntu-1804:20200112
+    command: /sbin/init
+    dockerfile: ../resources/docker/default.Dockerfile.j2
+    tmpfs:
+        - /run
+        - /tmp
+    capabilities:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - ubuntu
+  - name: debian-9
+    image: dwsr/molecule-debian-9:20200112
+    command: /sbin/init
+    dockerfile: ../resources/docker/default.Dockerfile.j2
+    tmpfs:
+        - /run
+        - /tmp
+    capabilities:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - debian
+  - name: debian-10
+    image: dwsr/molecule-debian-10:20200112
+    command: /sbin/init
+    dockerfile: ../resources/docker/default.Dockerfile.j2
+    tmpfs:
+        - /run
+        - /tmp
+    capabilities:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - debian
+  - name: centos-7
+    image: dwsr/molecule-centos-7:20200112
+    command: /sbin/init
+    dockerfile: ../resources/docker/default.Dockerfile.j2
+    tmpfs:
+        - /run
+        - /tmp
+    capabilities:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - centos_7
+  - name: centos-8
+    image: dwsr/molecule-centos-8:20200112
+    command: /sbin/init
+    dockerfile: ../resources/docker/default.Dockerfile.j2
+    tmpfs:
+        - /run
+        - /tmp
+    capabilities:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - centos_8
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  playbooks:
+    prepare: ../resources/playbooks/prepare.yml
+    converge: ../resources/playbooks/converge.yml
+  config_options:
+    connection:
+      pipelining: true
+  inventory:
+    links:
+      hosts: ../resources/inventories/default.yml
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
+  options:
+    n: 4

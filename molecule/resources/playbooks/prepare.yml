@@ -1,0 +1,42 @@
+- name: Create test repo
+  hosts: all
+  tasks:
+    - name: Create git repo
+      command: git init /tmp/ansible-repo
+      args:
+        creates: /tmp/ansible-repo/.git/HEAD
+    - name: Configure git author name
+      command: git config user.name 'Test Author'
+      args:
+        chdir: /tmp/ansible-repo
+    - name: Configure git author email
+      command: git config user.email 'test@example.com'
+      args:
+        chdir: /tmp/ansible-repo
+    - name: Copy unencrypted playbook file
+      copy:
+        src: ../files/test_playbook_unencrypted.yml
+        dest: /tmp/ansible-repo/playbook_unencrypted.yml
+    - name: Copy encrypted playbook file
+      copy:
+        src: ../files/test_playbook_encrypted.yml
+        dest: /tmp/ansible-repo/playbook_encrypted.yml
+    - name: Set inventory vars
+      set_fact:
+        molecule_test_python_interpreter: >-
+          {{
+            (ansible_python['version']['major'] == 2) |
+            ternary('/usr/bin/python3', '/usr/bin/python3')
+          }}
+    - name: Copy inventory file
+      template:
+        src: ../files/test_inventory.yml.j2
+        dest: /tmp/ansible-repo/inventory.yml
+    - name: Stage all files
+      command: git add -A
+      args:
+        chdir: /tmp/ansible-repo
+    - name: Commit files
+      command: git commit -m "Commit test files" --allow-empty
+      args:
+        chdir: /tmp/ansible-repo

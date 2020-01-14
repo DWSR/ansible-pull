@@ -1,0 +1,79 @@
+  # If ansible_account isn't set, then that means that we didn't create the
+  # user or the SSH key, so we assume that the user that we're connected as is
+  # the user that will run Ansible.
+- name: Set install directory var
+  set_fact:
+    ansible_pull_install_path: "{{ ansible_pull_install_dir }}/{{ ansible_pull_path }}"
+    ansible_pull_config_path: "{{ ansible_account['home'] | default(ansible_user_dir) }}/.ansible"
+    ansible_pull_log_path: "{{ ansible_pull_install_dir }}/{{ ansible_pull_logs_path }}"
+
+- name: Set username var
+  set_fact:
+    ansible_pull_user: >-
+      {{ ansible_account['name'] | default(ansible_user_id) }}
+
+- name: Set SSH private key path var
+  set_fact:
+    ansible_pull_privkey_path: >-
+      {{
+        ansible_account['ssh_key_file'] |
+        default(ansible_pull_created_ssh_key['filename']) |
+        default(ansible_pull_existing_ssh_privkey)
+      }}
+
+- name: Set virtualenv module
+  set_fact:
+    ansible_pull_venv_module: >-
+      {{
+        (ansible_python['version']['major'] == 3) |
+        ternary('venv', 'virtualenv')
+      }}
+
+- name: Ensure Ansible install directory exists
+  file:
+    path: "{{ ansible_pull_install_path }}"
+    mode: 0750
+    state: directory
+  register: ansible_dir
+
+- name: Ensure Ansible config directory exists
+  file:
+    path: "{{ ansible_pull_config_path }}"
+    mode: 0700
+    state: directory
+
+- name: Install pip in Ansible virtualenv
+  pip:
+    name: pip
+    virtualenv: "{{ ansible_dir['path'] }}/.venv"
+    virtualenv_command: "{{ ansible_python_interpreter }} -m {{ ansible_pull_venv_module }}"
+    version: 19.3.1
+    state: present
+
+- name: Install Ansible packages in virtualenv
+  pip:
+    chdir: "{{ ansible_dir['path'] }}/.venv"
+    name: "{{ item.key }}"
+    version: "{{ item.value }}"
+    virtualenv: "{{ ansible_dir['path'] }}/.venv"
+    virtualenv_command: "{{ ansible_python_interpreter }} -m {{ ansible_pull_venv_module }}"
+    state: present
+  loop: "{{ ansible_pull_packages | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+
+# Because $reasons, pip under CentOS 7 sometimes creates binary files in the venv
+# that aren't executable.
+- name: Fixup permissions for Ansible binaries (CentOS 7)
+  shell:
+    cmd: chmod u+x,g+x,o-x {{ ansible_dir['path'] }}/.venv/bin/ansible*
+    warn: false
+  changed_when: false
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7'
+
+- name: Create wrapper for pull run
+  template:
+    src: do_pull.j2
+    dest: "{{ ansible_pull_install_path }}/do_ansible_pull"
+    mode: 0700
+  register: wrapper_script

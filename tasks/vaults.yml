@@ -1,0 +1,14 @@
+- name: Create vault passphrase dir
+  file:
+    path: "{{ ansible_pull_config_path }}/.vault"
+    mode: 0700
+    state: directory
+
+- name: Create vault passphrase files
+  copy:
+    dest: "{{ ansible_pull_config_path }}/.vault/{{ item['key'] }}"
+    content: "{{ item['value'] }}"
+    mode: 0600
+  loop: "{{ ansible_pull_vaults | dict2items }}"
+  loop_control:
+    label: "{{ item['key'] }}"

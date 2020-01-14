@@ -1,0 +1,9 @@
+[Unit]
+Description=Runs Ansible locally
+
+[Service]
+Type=oneshot
+RemainAfterExit=false
+User={{ ansible_pull_username }}
+Group={{ ansible_pull_username }}
+ExecStart={{ wrapper_script['dest'] }}

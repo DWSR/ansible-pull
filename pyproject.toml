@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "dwsr.ansible-pull"
+version = "0.1.0"
+description = "An Ansible role to install and configure ansible-pull"
+authors = ["Brandon McNama <brandonmcnama@outlook.com>"]
+license = "MPL-2.0"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+ansible = "^2.9"
+
+[tool.poetry.dev-dependencies]
+pre-commit = "^1.21"
+molecule = {version = "^2.22", extras = ["docker"]}
+pytest-xdist = "^1.31"
+black = {version = "^19.10b0", allows-prereleases = true}
+
+[tool.black]
+target-version = ['py36', 'py37', 'py38']
+include = '\.pyi?$'
+exclude = '(venv|.vscode)'
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

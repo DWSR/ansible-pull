@@ -1,0 +1,26 @@
+#!/bin/sh -e
+
+# This file is managed by Ansible. Changes will be overwritten!
+
+# Variable declarations. These are all templated in Ansible
+##
+REPO_URL={{ ansible_pull_repo_url | quote }}
+REPO_BRANCH={{ ansible_pull_repo_branch | quote }}
+INVENTORY={{ ansible_pull_inventory | quote }}
+PLAYBOOK={{ ansible_pull_playbook | quote }}
+
+# export Ansible configuration
+{% if ansible_pull_timer_method != "systemd" %}
+export ANSIBLE_LOG_PATH={{ ansible_pull_log_path | quote }}
+{% endif %}
+
+{{ ansible_dir['path'] }}/.venv/bin/ansible-pull \
+  --url "$REPO_URL" \
+  --checkout "$REPO_BRANCH" \
+  --inventory "$INVENTORY" \
+  --connection local \
+  --private-key {{ ansible_pull_privkey_path }} \
+  {% for name, _ in ansible_pull_vaults.items() -%}
+  --vault-id '{{ name }}@{{ ansible_pull_config_path }}/.vault/{{ name }}' \
+  {% endfor -%}
+  "$PLAYBOOK"

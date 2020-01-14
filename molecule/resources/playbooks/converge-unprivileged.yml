@@ -1,0 +1,61 @@
+---
+- name: Install prereqs
+  hosts: all
+  tasks:
+    - name: Check if pip is present (CentOS 7)
+      command: command -v pip
+      failed_when: pip_presence['rc'] not in [0, 1]
+      changed_when: false
+      register: pip_presence
+      when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7'
+    - name: Install pip (CentOS 7)
+      shell:
+        cmd: 'curl https://bootstrap.pypa.io/get-pip.py | python'
+        warn: false
+      when: pip_presence['rc'] | default(None) == 1
+    - name: Install virtualenv (CentOS 7)
+      pip:
+        name: virtualenv
+        state: present
+      when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7'
+    - name: Install setuptools
+      pip:
+        name: setuptools
+        state: present
+      when: ansible_distribution == 'CentOS'
+    - name: Create SSH dir
+      file:
+        path: "/home/elbisna/.ssh"
+        owner: elbisna
+        group: elbisna
+        mode: 0600
+        state: directory
+    - name: Create SSH Key
+      openssh_keypair:
+        path: "/home/elbisna/.ssh/id_ed25519"
+        comment: ansible-generated
+        owner: elbisna
+        group: elbisna
+        mode: 0600
+        type: ed25519
+        state: present
+    - name: Create logrotate dir
+      file:
+        path: /etc/logrotate.d/
+        mode: 0777
+        state: directory
+
+- name: Converge
+  hosts: all
+  roles:
+    - ansible-pull
+  vars:
+    ansible_user: elbisna
+    ansible_pull_install_dir: /home/elbisna
+    ansible_pull_username: elbisna
+    ansible_pull_timer_method: cron
+    ansible_pull_create_user: false
+    ansible_pull_create_ssh_key: false
+    ansible_pull_install_system_prereqs: false
+    ansible_pull_install_pip: false
+    ansible_pull_logs_rotate: false

@@ -1,0 +1,11 @@
+[Unit]
+Description=Runs Ansible periodically
+
+[Timer]
+OnStartupSec=5min
+OnUnitActiveSec={{ ansible_pull_systemd_period }}
+Persistent=true
+Unit=ansible-pull.service
+
+[Install]
+WantedBy=timers.target

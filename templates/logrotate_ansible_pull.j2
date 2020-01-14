@@ -1,0 +1,13 @@
+{{ ansible_pull_log_path }} {
+  compress
+  compressoptions "-9"
+  copytruncate
+  daily
+  dateyesterday
+  delaycompress
+  missingok
+  maxage 90
+  nomail
+  shred
+  su {{ ansible_pull_user }} {{ ansible_pull_user }}
+}
