@@ -54,7 +54,7 @@ Supplying only this information will cause this role to:
 
 ## License
 
-BSD
+MPL-2.0
 
 ## Author Information
 
