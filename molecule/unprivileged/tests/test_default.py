@@ -32,7 +32,7 @@ def test_wrapper(host):
 
     host.run_expect([0], f"sudo -Hu elbisna {wrapper_script}")
 
-    log = host.file("/home/elbisna/logs/ansible-pull/ansible_pull.log")
+    log = host.file("/home/elbisna/logs/ansible-pull/ansible-pull.log")
 
     assert log.exists
     assert log.is_file
