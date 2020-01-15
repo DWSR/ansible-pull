@@ -1,29 +1,29 @@
-ansible_pull_logs_path: 'logs/ansible-pull/ansible_pull.log'
-ansible_pull_logs_rotate: true
-ansible_pull_playbook: ""
+ansible_pull_create_ssh_key: true
+ansible_pull_create_user: true
+ansible_pull_crontab_schedule:
+  day: '*'
+  hour: '*'
+  minute: '*/15'
+  month: '*'
+  weekday: '*'
+ansible_pull_existing_ssh_privkey: .ssh/id_ed25519
+ansible_pull_existing_ssh_pubkey: .ssh/id_ed25519.pub
+ansible_pull_extra_packages: {}
+ansible_pull_github:
+  auth_token: ''
+  repo_name: ''
+  repo_owner: ''
 ansible_pull_install_dir: /opt/ansible
 ansible_pull_install_method: venv
-ansible_pull_username: ansible
-ansible_pull_timer_method: systemd
-ansible_pull_create_user: true
-ansible_pull_create_ssh_key: true
-ansible_pull_existing_ssh_privkey: '.ssh/id_ed25519'
-ansible_pull_existing_ssh_pubkey: '.ssh/id_ed25519.pub'
-ansible_pull_extra_packages: {}
-ansible_pull_systemd_period: "15min"
-ansible_pull_crontab_schedule:
-  minute: '*/15'
-  hour: '*'
-  day: '*'
-  weekday: '*'
-  month: '*'
-ansible_pull_vaults: {}
-ansible_pull_install_system_prereqs: true
 ansible_pull_install_pip: true
-ansible_pull_inventory: ""
-ansible_pull_repo_url: ""
+ansible_pull_install_system_prereqs: true
+ansible_pull_inventory: ''
+ansible_pull_logs_path: logs/ansible-pull/ansible-pull.log
+ansible_pull_logs_rotate: true
+ansible_pull_playbook: ''
 ansible_pull_repo_branch: master
-ansible_pull_github:
-  auth_token: ""
-  repo_owner: ""
-  repo_name: ""
+ansible_pull_repo_url: ''
+ansible_pull_systemd_period: 15min
+ansible_pull_timer_method: systemd
+ansible_pull_username: ansible
+ansible_pull_vaults: {}
