@@ -17,8 +17,8 @@ def test_directory(host, path):
 
     assert f.exists
     assert f.is_directory
-    assert f.user == "ansible"
-    assert f.group == "ansible"
+    assert f.user == "elbisna"
+    assert f.group == "elbisna"
 
 
 @pytest.mark.parametrize("path", ["/opt/ansible/.ansible/.vault/test"])
@@ -27,7 +27,7 @@ def test_vault(host, path):
 
     assert f.exists
     assert f.is_file
-    assert f.user == "ansible"
-    assert f.group == "ansible"
+    assert f.user == "elbisna"
+    assert f.group == "elbisna"
     assert f.mode == 0o600
     assert f.content_string == "ansiblepull"

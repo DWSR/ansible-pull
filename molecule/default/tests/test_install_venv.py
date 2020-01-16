@@ -6,7 +6,7 @@ import testinfra.utils.ansible_runner
 
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ["MOLECULE_INVENTORY_FILE"]
-).get_hosts("all:!centos-7")
+).get_hosts("all")
 
 
 @pytest.mark.parametrize(
@@ -17,8 +17,8 @@ def test_directory(host, path):
 
     assert f.exists
     assert f.is_directory
-    assert f.user == "ansible"
-    assert f.group == "ansible"
+    assert f.user == "elbisna"
+    assert f.group == "elbisna"
 
 
 @pytest.mark.parametrize("package_name", [("ansible"), ("passlib"), ("proxmoxer")])
@@ -42,8 +42,8 @@ def test_running_ansible_pull(host):
     f = host.file(pull_script)
 
     assert f.exists
-    assert f.user == "ansible"
-    assert f.group == "ansible"
+    assert f.user == "elbisna"
+    assert f.group == "elbisna"
     assert f.mode == 0o700
 
     assert host.run_expect([0], pull_script)

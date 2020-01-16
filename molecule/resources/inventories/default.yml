@@ -17,6 +17,7 @@ all:
   vars:
     ansible_pull_extra_packages:
       proxmoxer: 1.0.3
+    ansible_pull_username: elbisna
     ansible_pull_inventory: inventory.yml
     ansible_pull_playbook: playbook_encrypted.yml
     ansible_pull_repo_url: file:///tmp/ansible-repo
