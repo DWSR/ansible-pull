@@ -21,7 +21,7 @@
   register: ansible_account
 
 - name: Grant Ansible passwordless sudo
-  copy:
-    src: sudoers_ansible
+  template:
+    src: sudoers_ansible.j2
     dest: /etc/sudoers.d/ansible
     mode: 0440

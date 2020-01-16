@@ -1,4 +1,4 @@
-# ansible_pull
+# ansible_pull [![Build Status](https://github.com/DWSR/ansible-pull/workflows/CI/badge.svg?branch=master)](https://github.com/DWSR/ansible-pull/actions?query=workflow%3ACI)
 
 An Ansible role to install and configure ansible-pull
 
