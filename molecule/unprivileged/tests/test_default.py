@@ -49,7 +49,7 @@ def test_crontab(host):
         f = host.file("/var/spool/cron/crontabs/elbisna")
         group = "crontab"
 
-    entry = "*/15 * * * * /home/elbisna/.ansible/do_ansible_pull > /dev/null 2>&1"
+    entry = "*/15 * * * * /home/elbisna/bin/do_ansible_pull > /dev/null 2>&1"
 
     assert f.exists
     assert f.is_file
