@@ -7,7 +7,7 @@ lint:
   name: yamllint
 platforms:
   - name: ubuntu-1604
-    image: dwsr/molecule-ubuntu-1604:20200112
+    image: dwsr/molecule-ubuntu-1604:20200510
     command: /sbin/init
     dockerfile: ../resources/docker/unprivileged.Dockerfile.j2
     tmpfs:
@@ -17,7 +17,7 @@ platforms:
     groups:
       - ubuntu
   - name: ubuntu-1804
-    image: dwsr/molecule-ubuntu-1804:20200112
+    image: dwsr/molecule-ubuntu-1804:20200510
     command: /sbin/init
     dockerfile: ../resources/docker/unprivileged.Dockerfile.j2
     tmpfs:
@@ -27,7 +27,7 @@ platforms:
     groups:
       - ubuntu
   - name: debian-9
-    image: dwsr/molecule-debian-9:20200112
+    image: dwsr/molecule-debian-9:20200510
     command: /sbin/init
     dockerfile: ../resources/docker/unprivileged.Dockerfile.j2
     tmpfs:
@@ -37,7 +37,7 @@ platforms:
     groups:
       - debian
   - name: debian-10
-    image: dwsr/molecule-debian-10:20200112
+    image: dwsr/molecule-debian-10:20200510
     command: /sbin/init
     dockerfile: ../resources/docker/unprivileged.Dockerfile.j2
     tmpfs:
@@ -47,7 +47,7 @@ platforms:
     groups:
       - debian
   - name: centos-7
-    image: dwsr/molecule-centos-7:20200112
+    image: dwsr/molecule-centos-7:20200510
     command: /sbin/init
     dockerfile: ../resources/docker/unprivileged.Dockerfile.j2
     tmpfs:
@@ -57,7 +57,7 @@ platforms:
     groups:
       - centos_7
   - name: centos-8
-    image: dwsr/molecule-centos-8:20200112
+    image: dwsr/molecule-centos-8:20200510
     command: /sbin/init
     dockerfile: ../resources/docker/unprivileged.Dockerfile.j2
     tmpfs:

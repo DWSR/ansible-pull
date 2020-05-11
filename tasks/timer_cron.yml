@@ -3,7 +3,7 @@
     backup: true
     name: 'Ansible Pull run'
     job: >
-      {{ ansible_pull_config_path }}/do_ansible_pull
+      {{ ansible_pull_install_path }}/do_ansible_pull
       > /dev/null 2>&1
     minute: "{{ ansible_pull_crontab_schedule['minute'] | default('*/5') }}"
     hour: "{{ ansible_pull_crontab_schedule['hour'] | default('*') }}"
