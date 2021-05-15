@@ -7,7 +7,7 @@ license = "MPL-2.0"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-ansible = "^2.9"
+ansible = "^3.4"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^1.21"
