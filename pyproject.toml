@@ -12,7 +12,7 @@ ansible = "^2.9"
 [tool.poetry.dev-dependencies]
 pre-commit = "^1.21"
 molecule = {version = "^2.22", extras = ["docker"]}
-pytest-xdist = "^1.31"
+pytest-xdist = "^3.0.0"
 black = {version = "^19.10b0", allows-prereleases = true}
 
 [tool.black]
